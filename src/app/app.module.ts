@@ -4,9 +4,24 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { NoPageFoundComponent } from './pages/no-page-found/no-page-found.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { BreadcrumbsComponent } from './shared/breadcrumbs/breadcrumbs.component';
+import { HeaderComponent } from './shared/header/header.component';
+import { SideBarComponent } from './shared/side-bar/side-bar.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    NoPageFoundComponent,
+    DashboardComponent,
+    BreadcrumbsComponent,
+    HeaderComponent,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,
