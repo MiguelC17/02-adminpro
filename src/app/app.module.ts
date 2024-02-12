@@ -1,37 +1,27 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+// Modules
 import { AppRoutingModule } from './app-routing.module';
+import { PagesModule } from './pages/pages.module';
+import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 
+// Components
 import { AppComponent } from './app.component';
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { NoPageFoundComponent } from './pages/no-page-found/no-page-found.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { BreadcrumbsComponent } from './shared/breadcrumbs/breadcrumbs.component';
-import { HeaderComponent } from './shared/header/header.component';
-import { SideBarComponent } from './shared/side-bar/side-bar.component';
-import { ProgressComponent } from './pages/progress/progress.component';
-import { Grafica1Component } from './pages/grafica1/grafica1.component';
-import { PagesComponent } from './pages/pages.component';
+import { NoPageFoundComponent } from './no-page-found/no-page-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    RegisterComponent,
     NoPageFoundComponent,
-    DashboardComponent,
-    BreadcrumbsComponent,
-    HeaderComponent,
-    SideBarComponent,
-    ProgressComponent,
-    Grafica1Component,
-    PagesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    PagesModule,
+    SharedModule,
+    AuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
