@@ -17,6 +17,7 @@ const routes: Routes = [
    path: '/shopping' ShoppingRouting
 */
 
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', component: NoPageFoundComponent },
 ]
 
