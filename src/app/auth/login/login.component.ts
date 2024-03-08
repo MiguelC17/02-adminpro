@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
@@ -19,7 +19,7 @@ export class LoginComponent implements AfterViewInit {
   public formSubmitted = false
 
   public loginForm = this.fb.group({
-    email: [ localStorage.getItem('email') || '' , [Validators.required, Validators.email]],
+    email: [localStorage.getItem('email') || '', [Validators.required, Validators.email]],
     password: ['', Validators.required],
     remember: [false]
   })
@@ -27,7 +27,8 @@ export class LoginComponent implements AfterViewInit {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private ngZone: NgZone,
   ) { }
 
   ngAfterViewInit(): void {
@@ -37,7 +38,7 @@ export class LoginComponent implements AfterViewInit {
   googleInit() {
     google.accounts.id.initialize({
       client_id: '107959672618-upesto1ireqh0q4uokaavvrk1urhkvr0.apps.googleusercontent.com',
-      callback: ( response: any ) => this.handleCredentialResponse( response )
+      callback: (response: any) => this.handleCredentialResponse(response)
     });
 
     google.accounts.id.renderButton(
@@ -47,10 +48,14 @@ export class LoginComponent implements AfterViewInit {
     );
   }
 
-  handleCredentialResponse( response: any ) {
-    this.usuarioService.loginGoogle( response.credential )
+  handleCredentialResponse(response: any) {
+    this.usuarioService.loginGoogle(response.credential)
       .subscribe({
-        next: ( resp ) => { this.router.navigateByUrl('/') }
+        next: (resp) => {
+          this.ngZone.run(() => {
+            this.router.navigateByUrl('/')
+          })
+        }
       })
   }
 
@@ -58,7 +63,7 @@ export class LoginComponent implements AfterViewInit {
     this.usuarioService.login(this.loginForm.value)
       .subscribe({
         next: (resp) => {
-          if ( this.loginForm.get('remember')!.value ) {
+          if (this.loginForm.get('remember')!.value) {
             localStorage.setItem('email', this.loginForm.get('email')!.value!)
           } else {
             localStorage.removeItem('email')
