@@ -12,14 +12,11 @@ export class SideBarComponent {
 
   public usuario!: Usuario
 
-  menuItems: any[];
-
   constructor(
-    private sideBarService: SideBarService,
+    public sideBarService: SideBarService,
     private usuarioService: UsuarioService,
   ) {
     this.usuario = usuarioService.usuario!
-    this.menuItems = sideBarService.menu
   }
 
 }

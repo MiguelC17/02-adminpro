@@ -37,8 +37,18 @@ export class UsuarioService {
       }
     }
   }
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE' {
+    return this.usuario.role
+  }
+
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem('token', token)
+    localStorage.setItem('menu', JSON.stringify(menu))
+
+  }
 
   logout() {
+    localStorage.removeItem('menu')
     localStorage.removeItem('token')
     location.reload()
     google.accounts.id.revoke('macc1712@gmail.com', () => {
@@ -49,15 +59,15 @@ export class UsuarioService {
   }
 
   validarToken() {
-
-
     return this.http.get(`${base_url}/login/renew`, {
       headers: { 'x-token': this.token }
     }).pipe(
       map((resp: any) => {
         const { email, google, nombre, role, img, uid } = resp.usuario
         this.usuario = new Usuario(nombre, email, '', img, google, role, uid)
-        localStorage.setItem('token', resp.token)
+
+        this.guardarLocalStorage( resp.token, resp.menu )
+
         return true
       }),
       catchError((error) => { return of(false) })
@@ -67,7 +77,9 @@ export class UsuarioService {
   crearUsuario(formData: RegisterForm) {
     return this.http.post(`${base_url}/usuarios`, formData)
       .pipe(
-        tap((resp: any) => { localStorage.setItem('token', resp.token) })
+        tap((resp: any) => {
+          this.guardarLocalStorage( resp.token, resp.menu )
+        })
       )
   }
 
@@ -84,7 +96,9 @@ export class UsuarioService {
   login(formData: any) {
     return this.http.post(`${base_url}/login`, formData)
       .pipe(
-        tap((resp: any) => { localStorage.setItem('token', resp.token) })
+        tap((resp: any) => {
+          this.guardarLocalStorage( resp.token, resp.menu )
+        })
       )
   }
 
@@ -92,7 +106,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/login/google`, { token })
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage( resp.token, resp.menu )
         })
       )
   }
@@ -115,7 +129,7 @@ export class UsuarioService {
       )
   }
 
-  eliminarUsuario( usuario: Usuario ) {
+  eliminarUsuario(usuario: Usuario) {
 
     const url = `${base_url}/usuarios/${usuario.uid}`
     return this.http.delete(url, this.headers)
